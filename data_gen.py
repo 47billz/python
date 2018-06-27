@@ -3,6 +3,7 @@ from botocore.exceptions import ClientError
 from multiprocessing.dummy import Pool as ThreadPool
 import sys,random,time
 import csv,json
+import logging
 
 def upload_to_s3(i):
     num_rows = int(sys.argv[2])
@@ -53,9 +54,17 @@ def columns_json(num_colums,num_rows):
     print json.dumps(result,indent=2)
     return result
 
+def init_logging():
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.DEBUG)
+    requests_log = logging.getLogger("botocore")
+    requests_log.setLevel(logging.DEBUG)
+    requests_log.propagate = True
+
 if __name__ == "__main__":
     if len(sys.argv)==6 or len(sys.argv)==7 :
         ts = time.clock()
+        #init_logging()
         session = boto3.session.Session()
         s3 = session.client('s3')
         pool = ThreadPool(200)
