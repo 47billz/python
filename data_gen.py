@@ -32,26 +32,28 @@ def upload_to_s3(i):
 
 def generate_row(num_columns):
     row = ''.join(['{},'.format(random.randint(0,9)) 
-                    for i in xrange(num_columns)])
+                    for i in range(num_columns)])
     return row[:-1]+'\n'
 
 def generate_column(num_rows,num_columns):
     columns = ''.join([generate_row(num_columns) 
-                    for i in xrange(num_rows)])
-    print columns
+                    for i in range(num_rows)])
+    print(columns)
     return columns
 
 def rows_json(num_colums):
     result = {}
-    for i in xrange(num_colums):
+    for i in range(num_colums):
         result['_{}{}'.format(i,time.clock())]= str(random.randint(0,9))
     return result
 
 def columns_json(num_colums,num_rows):
-    result = []
-    for i in xrange(num_rows):
-        result.append(rows_json(num_colums))
-    print json.dumps(result,indent=2)
+    #result = []
+    result = {}
+    for i in range(num_rows):
+        #result.append(rows_json(num_colums))
+         result["_"+str(i)]= rows_json(num_colums)
+    print(json.dumps(result,indent=2))
     return result
 
 def init_logging():
@@ -70,8 +72,8 @@ if __name__ == "__main__":
         pool = ThreadPool(200)
         results = pool.map(upload_to_s3,range(int(sys.argv[1])))
         te = time.clock()
-        print "took {} seconds".format(str(te-ts))
+        print("took {} seconds".format(str(te-ts)))
     else:
-        print '''Oh my, we need 6 args and you have {}:
+        print('''Oh my, we need 6 args and you have {}:
 python data_gen.py file_count row column bucket prefix
-        '''.format(len(sys.argv))
+        '''.format(len(sys.argv)))
