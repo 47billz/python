@@ -2,7 +2,7 @@ import boto3
 from botocore.exceptions import ClientError
 from multiprocessing.dummy import Pool as ThreadPool
 import sys,random,time
-import csv,jsonpi
+import csv,json
 import logging
 
 def upload_to_s3(i):
