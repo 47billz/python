@@ -2,7 +2,7 @@ import boto3
 from botocore.exceptions import ClientError
 from multiprocessing.dummy import Pool as ThreadPool
 import sys,random,time
-import csv,json
+import csv,jsonpi
 import logging
 
 def upload_to_s3(i):
@@ -48,10 +48,8 @@ def rows_json(num_colums):
     return result
 
 def columns_json(num_colums,num_rows):
-    #result = []
     result = {}
     for i in range(num_rows):
-        #result.append(rows_json(num_colums))
          result["_"+str(i)]= rows_json(num_colums)
     print(json.dumps(result,indent=2))
     return result
