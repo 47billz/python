@@ -5,7 +5,6 @@ import json
 import os
 import time
 import logging
-from urllib import URLopener
 import subprocess
 
 def copy_jar_when_ready(source,destination,check):
