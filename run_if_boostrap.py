@@ -6,20 +6,21 @@ import os
 import time
 import logging
 from urllib import URLopener
-from multiprocessing import Process
+import subprocess
 
-def copy_jar_when_ready(source,destination,name,check):
+def copy_jar_when_ready(source,destination,check):
     logging.warn('startin process {} in master'.format(os.getpid()))
     while not os.path.isfile(check):
         logging.warn('waiting for file to exist ...')
         time.sleep(10)
-    results = download_file(source,destination+name)
-    logging.warn('{}'.format(results))
+    download_file(source,destination)
+    #logging.warn('{}'.format(results))
 
 def download_file(source,destination):
     logging.warn('Downloading file ...')
-    url_opener = URLopener()
-    return url_opener.retrieve(source,destination)
+    subprocess.call(['sudo','wget',source,'-P',destination])
+    #url_opener = URLopener()
+    #return url_opener.retrieve(source,destination)
 
 def is_master(instance_info):
     is_master = False
@@ -37,19 +38,28 @@ def is_master(instance_info):
 if __name__=="__main__":
     #init vars
     jar_source = 'http://central.maven.org/maven2/com/google/guava/guava/25.1-jre/guava-25.1-jre.jar'
-    jar_name = jar_source.split('/')[-1]
-    jar_destination = './temp/' #'/usr/lib/spark/jars/'
+    jar_destination = '/usr/lib/spark/jars/'
     instance_info = "/mnt/var/lib/info/instance.json"
     check = '/var/run/spark/spark-history-server.pid'
     
     if is_master(instance_info):
-        #p = Process(target=copy_jar_when_ready, args=(jar_source,jar_destination,jar_name,check))
-        #p.start()
         pid = os.fork()
-        if pid == 0:
-            copy_jar_when_ready(jar_source,jar_destination,jar_name,check)
-        print('bootstrap done')
-        sys.exit(0)
+        try:
+            if pid > 0:
+                sys.exit(0)
+        except OSError, e:
+            logging.error("Failed to Demonize: %d, %s\n" % (e.errno,e.strerror))
+            sys.exit(1)
+        
+        os.setsid()
+        pid = os.fork()
+        try:
+            if pid > 0:
+                sys.exit(0)
+        except OSError, e:
+            logging.error("Failed to Demonize: %d, %s\n" % (e.errno,e.strerror))
+            sys.exit(1)
+        copy_jar_when_ready(jar_source,jar_destination,check)
     else:
         logging.warn('instance is not mastser, exiting ..')
         sys.exit(0)
