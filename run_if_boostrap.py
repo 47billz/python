@@ -14,13 +14,10 @@ def copy_jar_when_ready(source,destination,check):
         logging.warn('waiting for file to exist ...')
         time.sleep(10)
     download_file(source,destination)
-    #logging.warn('{}'.format(results))
 
 def download_file(source,destination):
     logging.warn('Downloading file ...')
     subprocess.call(['sudo','wget',source,'-P',destination])
-    #url_opener = URLopener()
-    #return url_opener.retrieve(source,destination)
 
 def is_master(instance_info):
     is_master = False
@@ -36,7 +33,8 @@ def is_master(instance_info):
 
 
 if __name__=="__main__":
-    #init vars
+    #init vars jar_source = sys.argv[1], jar_destination = sys.argv[2] ,
+    #check = sys.argv[3]
     jar_source = 'http://central.maven.org/maven2/com/google/guava/guava/25.1-jre/guava-25.1-jre.jar'
     jar_destination = '/usr/lib/spark/jars/'
     instance_info = "/mnt/var/lib/info/instance.json"
