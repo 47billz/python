@@ -1,5 +1,5 @@
 #sloppy python scripts
-'''
+```
 poker - OOP Test Driven Poker
 
 data_gen.py - Generater Partitioned (Hive Compatable Dynamic Partitioning) random data [csv|json], put directly to S3, multithreaded
@@ -13,4 +13,4 @@ ml_ops.py - Amazon Machine Learning Mandane operations
 py_sdk_crawler.py - Crawl a python repository and summarise the functions and classes
 
 run_if_boostrap.py  -  EMR (Elastic MapReduce) RunIF bootstrap Example in Python - Run Ops as background process to bypass waiting for step to finish
-'''
+```
