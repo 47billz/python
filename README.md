@@ -1,6 +1,6 @@
 #sloppy python scripts
 ```
-poker - OOP Test Driven Poker
+poker
 
 data_gen.py - Generater Partitioned (Hive Compatable Dynamic Partitioning) random data [csv|json], put directly to S3, multithreaded
 
